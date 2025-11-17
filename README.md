@@ -51,13 +51,13 @@ Exit from root shell:
 exit
 ```
 
-## Enter chroot
+# Enter chroot
 
 ```bash
 sudo chroot Noble
 ```
 
-## Add user 
+## Add user
 
 ```bash
 adduser numby
@@ -76,7 +76,7 @@ apt update && apt install nano
 nano /etc/apt/sources.list
 ```
 
-Add:
+This is my list:
 
 ```
 deb http://archive.ubuntu.com/ubuntu noble main restricted multiverse universe
@@ -168,20 +168,29 @@ neofeth
 cd /home/numby
 ```
 
-You can add additional mount point if you want to edit the code from the chroot but with the host vscode. You can mount bind your project directory before entering the chroot
+You can add an additional mount point if you want to edit the code from the chroot but with the host's VSCode. You can bind-mount your project directory before entering the chroot:
+
 ```bash
 sudo mount --bind ~/SANDBOX/Noble/home/numby/ ~/Dev/numby/
+```
+
+To make this mount persistent after reboot, add it to `/etc/fstab` as well:
+
+```bash
+sudo echo "~/SANDBOX/Noble/home/numby/ ~/Dev/numby/ none bind 0 0" >> /etc/fstab
 ```
 
 Is it easy right? Now you can create the small bash script to launch your chroot
 ```bash
 xhost +LOCAL:
-sudo mount --bind ~/SANDBOX/Noble/home/numby/ ~/Dev/numby/
-sudo chroot /home/hifzhil/SANDBOX/Noble
+sudo chroot ~/SANDBOX/Noble
 ```
-
-
 
 Then you can launch its own terminal, like Kitty, so it will be the only chroot terminal, separate from the host system
 
-So now we can run ROS on OpenSuse :). You can install ROS following it's official documentation.
+![description](assets/kitty-term.png)
+
+So now we can run ROS on OpenSuse :). You can install ROS inside this chroot following ROS official documentation.
+
+
+If you want to get rid of this chroot, first remove its mount entries manually from /etc/fstab. After that, unmount all the filesystems you mounted inside the chroot, and then simply delete the chroot directory.
