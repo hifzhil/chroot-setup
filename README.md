@@ -100,7 +100,7 @@ Then add this at the bottom:
 su numby
 ```
 
-Exit the chroot and re-enter, you will now log in as numby
+After editing your ~/.bashrc, exit the chroot and re-enter—this time you'll automatically be logged in as user numby. When you're ready to leave, you'll need to type `exit` once to leave the numby session, and once again to exit from root.
 
 # Ricing Up
 Now we already have our chroot set. But we will try to make it better
@@ -164,7 +164,7 @@ xeyes
 You can add this on the numby bashrc, so no need to export display for every chrooting
 ```bash
 export DISPLAY=:0 
-neofeth 
+neofetch 
 cd /home/numby
 ```
 
@@ -174,10 +174,10 @@ You can add an additional mount point if you want to edit the code from the chro
 sudo mount --bind ~/SANDBOX/Noble/home/numby/ ~/Dev/numby/
 ```
 
-To make this mount persistent after reboot, add it to `/etc/fstab` as well:
+To make this mount persistent after reboot, add it to `/etc/fstab` as root:
 
 ```bash
-sudo echo "~/SANDBOX/Noble/home/numby/ ~/Dev/numby/ none bind 0 0" >> /etc/fstab
+echo "~/SANDBOX/Noble/home/numby/ ~/Dev/numby/ none bind 0 0" | sudo tee -a /etc/fstab
 ```
 
 Is it easy right? Now you can create the small bash script to launch your chroot
@@ -188,9 +188,12 @@ sudo chroot ~/SANDBOX/Noble
 
 Then you can launch its own terminal, like Kitty, so it will be the only chroot terminal, separate from the host system
 
-![description](assets/kitty-term.png)
+![Kity term](assets/kitty-term.png)
 
 So now we can run ROS on OpenSuse :). You can install ROS inside this chroot following ROS official documentation.
+
+
+![ROS running inside chroot](assets/ROS-running.png)
 
 
 If you want to get rid of this chroot, first remove its mount entries manually from /etc/fstab. After that, unmount all the filesystems you mounted inside the chroot, and then simply delete the chroot directory.
